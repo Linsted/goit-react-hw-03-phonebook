@@ -6,7 +6,7 @@ import {Section} from "./App.styled"
 
 export class App extends React.Component {
 
-
+  
 
   state = {
     contacts: [],
@@ -14,6 +14,21 @@ export class App extends React.Component {
       
   }
 
+  
+
+  componentDidMount() {
+    const parsedStorage = JSON.parse(localStorage.getItem("contactStorage"));
+    if (parsedStorage !== null) {
+      this.setState({contacts: parsedStorage})
+    }
+  }
+
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.contacts !== this.state.contacts) {
+      localStorage.setItem("contactStorage", JSON.stringify(this.state.contacts))
+    }
+  }
 
   addContact = (newState) => {
 
@@ -46,13 +61,10 @@ export class App extends React.Component {
   render () {
   
     const { addContact, filterForm, deleteContact } = this;
-    const { filter } = this.state;
+    const { filter, contacts } = this.state;
 
-
-    const normalizedRequest = this.state.filter.toLowerCase();
-    const filteredContacts = this.state.contacts
-      .filter(contact => contact.name.toLowerCase()
-      .includes(normalizedRequest));
+    const normalizedRequest = filter.toLowerCase();
+    const filteredContacts = contacts.filter(contact => contact.name.toLowerCase().includes(normalizedRequest));
 
 
   
